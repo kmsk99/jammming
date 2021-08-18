@@ -9,46 +9,53 @@ class App extends React.Component {
         super(props);
         this.addTrack = this.addTrack.bind(this);
         this.removeTrack = this.removeTrack.bind(this);
+        this.updatePlaylistName = this.updatePlaylistName.bind(this);
         this.state = {
             playlistName: "anty",
             playlistTracks: [
                 {
-                    name: "kim12",
-                    artist: "min12",
-                    album: "seok12",
-                    id: "1122",
-                },
-                {
-                    name: "kim22",
-                    artist: "min22",
-                    album: "seok22",
-                    id: "11222",
-                },
-                {
-                    name: "kim32",
-                    artist: "min32",
-                    album: "seok32",
-                    id: "11232",
-                },
-            ],
-            searchResults: [
-                {
                     name: "kim1",
                     artist: "min1",
                     album: "seok1",
-                    id: "112",
+                    id: 1,
+                    uri: "http://spot.com",
                 },
                 {
                     name: "kim2",
                     artist: "min2",
                     album: "seok2",
-                    id: "1122",
+                    id: 2,
+                    uri: "http://spot.com",
                 },
                 {
                     name: "kim3",
                     artist: "min3",
                     album: "seok3",
-                    id: "1123",
+                    id: 3,
+                    uri: "http://spot.com",
+                },
+            ],
+            searchResults: [
+                {
+                    name: "kim4",
+                    artist: "min4",
+                    album: "seok4",
+                    id: 4,
+                    uri: "http://spot.com",
+                },
+                {
+                    name: "kim5",
+                    artist: "min5",
+                    album: "seok5",
+                    id: 5,
+                    uri: "http://spot.com",
+                },
+                {
+                    name: "kim6",
+                    artist: "min6",
+                    album: "seok6",
+                    id: 6,
+                    uri: "http://spot.com",
                 },
             ],
         };
@@ -56,13 +63,20 @@ class App extends React.Component {
 
     addTrack(track) {
         if (this.state.playlistTracks.find((savedTrack) => savedTrack.id === track.id)) {
-            this.state.playlistTracks.push(track);
+        } else {
+            let addedTrack = [...this.state.playlistTracks, track];
+            this.setState({ playlistTracks: addedTrack });
         }
     }
 
     removeTrack(track) {
-        this.setState((state) => {
-            state.playlistTracks.filter((savedTrack) => savedTrack.id !== track.id);
+        let removedTrack = this.state.playlistTracks.filter((savedTrack) => savedTrack.id !== track.id);
+        this.setState({ playlistTracks: removedTrack });
+    }
+
+    updatePlaylistName(name) {
+        this.setState(() => {
+            return { playlistName: name };
         });
     }
 
@@ -76,7 +90,7 @@ class App extends React.Component {
                     <SearchBar />
                     <div className="App-playlist">
                         <SearchResults searchResults={this.state.searchResults} onAdd={this.addTrack} />
-                        <Playlist playlistName={this.state.playlistName} playlistTracks={this.state.playlistTracks} onRemove={this.removeTrack} />
+                        <Playlist playlistName={this.state.playlistName} playlistTracks={this.state.playlistTracks} onRemove={this.removeTrack} onNameChange={this.updatePlaylistName} />
                     </div>
                 </div>
             </div>
