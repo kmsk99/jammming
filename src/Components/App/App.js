@@ -3,6 +3,7 @@ import React from "react";
 import SearchBar from "../SearchBar/SearchBar";
 import SearchResults from "../SearchResults/SearchResults";
 import Playlist from "../Playlist/Playlist";
+import Spotify from "../../util/Spotify";
 
 class App extends React.Component {
     constructor(props) {
@@ -10,53 +11,55 @@ class App extends React.Component {
         this.addTrack = this.addTrack.bind(this);
         this.removeTrack = this.removeTrack.bind(this);
         this.updatePlaylistName = this.updatePlaylistName.bind(this);
+        this.savePlaylist = this.savePlaylist.bind(this);
+        this.search = this.search.bind(this);
         this.state = {
-            playlistName: "anty",
+            playlistName: "New Playlist",
             playlistTracks: [
-                {
-                    name: "kim1",
-                    artist: "min1",
-                    album: "seok1",
-                    id: 1,
-                    uri: "http://spot.com",
-                },
-                {
-                    name: "kim2",
-                    artist: "min2",
-                    album: "seok2",
-                    id: 2,
-                    uri: "http://spot.com",
-                },
-                {
-                    name: "kim3",
-                    artist: "min3",
-                    album: "seok3",
-                    id: 3,
-                    uri: "http://spot.com",
-                },
+                // {
+                //     name: "kim1",
+                //     artist: "min1",
+                //     album: "seok1",
+                //     id: 1,
+                //     uri: "http://spot.com",
+                // },
+                // {
+                //     name: "kim2",
+                //     artist: "min2",
+                //     album: "seok2",
+                //     id: 2,
+                //     uri: "http://spot.com",
+                // },
+                // {
+                //     name: "kim3",
+                //     artist: "min3",
+                //     album: "seok3",
+                //     id: 3,
+                //     uri: "http://spot.com",
+                // },
             ],
             searchResults: [
-                {
-                    name: "kim4",
-                    artist: "min4",
-                    album: "seok4",
-                    id: 4,
-                    uri: "http://spot.com",
-                },
-                {
-                    name: "kim5",
-                    artist: "min5",
-                    album: "seok5",
-                    id: 5,
-                    uri: "http://spot.com",
-                },
-                {
-                    name: "kim6",
-                    artist: "min6",
-                    album: "seok6",
-                    id: 6,
-                    uri: "http://spot.com",
-                },
+                // {
+                //     name: "kim4",
+                //     artist: "min4",
+                //     album: "seok4",
+                //     id: 4,
+                //     uri: "http://spot.com",
+                // },
+                // {
+                //     name: "kim5",
+                //     artist: "min5",
+                //     album: "seok5",
+                //     id: 5,
+                //     uri: "http://spot.com",
+                // },
+                // {
+                //     name: "kim6",
+                //     artist: "min6",
+                //     album: "seok6",
+                //     id: 6,
+                //     uri: "http://spot.com",
+                // },
             ],
         };
     }
@@ -80,6 +83,18 @@ class App extends React.Component {
         });
     }
 
+    savePlaylist() {
+        let trackURIs = this.state.playlistTracks.map(function (tracks) {
+            return tracks.uri;
+        });
+        Spotify.savePlaylist(this.state.playlistName, trackURIs);
+    }
+
+    async search(term) {
+        const searchResult = await Spotify.search(term);
+        this.setState({ searchResults: searchResult });
+    }
+
     render() {
         return (
             <div>
@@ -87,10 +102,16 @@ class App extends React.Component {
                     Ja<span className="highlight">mmm</span>ing
                 </h1>
                 <div className="App">
-                    <SearchBar />
+                    <SearchBar onSearch={this.search} />
                     <div className="App-playlist">
                         <SearchResults searchResults={this.state.searchResults} onAdd={this.addTrack} />
-                        <Playlist playlistName={this.state.playlistName} playlistTracks={this.state.playlistTracks} onRemove={this.removeTrack} onNameChange={this.updatePlaylistName} />
+                        <Playlist
+                            playlistName={this.state.playlistName}
+                            playlistTracks={this.state.playlistTracks}
+                            onRemove={this.removeTrack}
+                            onNameChange={this.updatePlaylistName}
+                            onSave={this.savePlaylist}
+                        />
                     </div>
                 </div>
             </div>
